@@ -13,11 +13,11 @@ import static java.lang.Math.random;
 import java.util.List;
 
 
-public class gameView extends View {
-    public gameView(Context context) {
+public class GameView extends View {
+    public GameView(Context context) {
         super(context);
     }
-    public gameView (Context context, AttributeSet attrs) {
+    public GameView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
     float phone_width = 0f;
@@ -35,6 +35,10 @@ public class gameView extends View {
     float matrixWidth = 350f;
 
     int nbr_square = 4;
+
+    public void setNbr_square(int nbr_square) {
+        this.nbr_square = nbr_square;
+    }
 
     int nbrShape = 0;
 
