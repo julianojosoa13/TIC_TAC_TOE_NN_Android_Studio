@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import static java.lang.Math.random;
 
+import java.util.List;
+
 
 public class gameView extends View {
     public gameView(Context context) {
@@ -39,6 +41,9 @@ public class gameView extends View {
     Paint paint = new Paint();
     Paint paintFill = new Paint();
     Shape gameShape = null;
+    Shape victoriousShape = null;
+    String victoryLayout = "";
+    boolean gameOver = false;
 
 
     @Override
@@ -87,10 +92,13 @@ public class gameView extends View {
                     matrice[i][j].drawShape(canvas);
                     //System.out.println(gameShape.getCenterX() + " - " + gameShape.getCenterY() + " - " + gameShape.getRadius() + gameShape.getPaint().getColor());
                 }
-                
             }
         }
+        victoriousShape = checkWinner(matrice);
 
+        if (victoriousShape != null) {
+            System.out.println("Victoire :\n" + victoriousShape.getType() + "\n" + victoryLayout);
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -108,7 +116,7 @@ public class gameView extends View {
         coordTop = (int) ((clicY - matrixTop) / square_width);
         coordLeft = (int) ((clicX - matrixLeft) / square_width);
 
-        if (clicX >= matrixLeft && clicX <= (matrixLeft + matrixWidth) && clicY >= matrixTop && clicY <= (matrixTop + matrixWidth)) {
+        if (clicX >= matrixLeft && clicX <= (matrixLeft + matrixWidth) && clicY >= matrixTop && clicY <= (matrixTop + matrixWidth) && gameOver == false) {
             if (matrice[coordLeft][coordTop] == null) {
                 shapeTop = matrixTop + coordTop * square_width;
                 shapeLeft = matrixLeft + coordLeft * square_width;
@@ -125,7 +133,7 @@ public class gameView extends View {
                 // Code fametahana CPU
                // System.out.println(nbrShape);
 
-                if (nbrShape > 1) {
+                if (nbrShape >= 1) {
                     coordLeft = (int) (random() * 100) % nbr_square;
                     coordTop = (int) (random() * 100) % nbr_square;
                     while (matrice[coordLeft][coordTop] != null) {
@@ -151,5 +159,73 @@ public class gameView extends View {
         }
 
         return true;
+    }
+
+    private Shape checkWinner(Shape[][] matrice) {
+        int counter = 1;
+        int counter_diagonal = 0;
+        // Verification des lignes
+        for(int i=0; i< nbr_square;i++) {
+            for (int j=1; j < nbr_square;j++) {
+                int next_index = (i+j) % nbr_square;
+
+                if(matrice[i][i] == null || matrice[i][next_index] == null) {
+                    break;
+                } else if(matrice[i][i].getType() != matrice[i][next_index].getType()){
+                    break;
+                } else {
+                    counter++;
+                }
+
+                if(counter == nbr_square) {
+                    victoryLayout = "ligne";
+                    gameOver = true;
+                    return matrice[i][i];
+                }
+            }
+            int next_diag = (i+1) % nbr_square;
+            if (matrice[i][i] != null && matrice[next_diag][next_diag] != null && matrice[i][i].getType() == matrice[next_diag][next_diag].getType()) {
+                counter_diagonal++;
+            }
+            if (counter_diagonal == nbr_square) {
+                victoryLayout = "diagonale_gauche";
+                gameOver = true;
+                return matrice[i][i];
+            }
+        }
+
+        counter = 1;
+        counter_diagonal = 0;
+        // Verification des colonnes
+        for (int j = (nbr_square - 1 ); j >= 0; j-- ) {
+            for(int i = 1; i < nbr_square; i++) {
+                int next_index = (i+j) % nbr_square;
+
+                if(matrice[j][j]== null || matrice[next_index][j] == null) {
+                    break;
+                } else if(matrice[j][j].getType() != matrice[next_index][j].getType()) {
+                    break;
+                } else {
+                    counter++;
+                }
+
+                if(counter == nbr_square) {
+                    victoryLayout = "colonne";
+                    gameOver = true;
+                    return matrice[i][i];
+                }
+            }
+            int next_diag = (j-1) % nbr_square;
+            if (matrice[j][j] != null && matrice[next_diag][next_diag] != null && matrice[j][j].getType() == matrice[next_diag][next_diag].getType()) {
+                counter_diagonal++;
+            }
+            if (counter_diagonal == nbr_square) {
+                victoryLayout = "diagonale_droite";
+                gameOver = true;
+                return matrice[j][j];
+            }
+        }
+        gameOver = false;
+        return null;
     }
 }
