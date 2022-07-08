@@ -23,7 +23,7 @@ public class gameView extends View {
     float phone_width = 0f;
     float phone_height = 0f;
 
-    Player joueur1 = new Player("P1", "player","circle",Color.BLUE);
+    Player joueur1 = new Player("P1", "player","cross",Color.BLUE);
     Player cpu = new Player("CPU", "cpu","cross",Color.YELLOW);
 
     Shape[][] matrice = null;
@@ -34,7 +34,7 @@ public class gameView extends View {
     float matrixBottom = 0f;
     float matrixWidth = 350f;
 
-    int nbr_square = 3;
+    int nbr_square = 4;
 
     int nbrShape = 0;
 
@@ -189,6 +189,7 @@ public class gameView extends View {
 
                     gameShape = new Shape(shapeLeft, shapeTop, shapeRight, shapeBottom, cpu.getShapeColor(), cpu.getShapeType(),cpu);
                     matrice[coordLeft][coordTop] = gameShape;
+                    victoriousShape = checkWinner(matrice);
                     gameShape = null;
                     nbrShape -= 1;
                 }
@@ -196,7 +197,6 @@ public class gameView extends View {
                 invalidate();
             }
             if (nbrShape == 0 && gameOver == false) {
-                gameOver = false;
                 matrice = null;
                 System.out.println("Draw");
                 invalidate();
