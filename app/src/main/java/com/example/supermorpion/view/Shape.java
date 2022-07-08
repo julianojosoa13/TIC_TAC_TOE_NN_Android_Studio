@@ -26,6 +26,8 @@ public class Shape {
     private float centerX, centerY, radius;
     private Paint paint;
 
+    private Player player;
+
     private String type;
 
     public void setType(String type) {
@@ -101,12 +103,17 @@ public class Shape {
     }
 
 
-    public Shape(float left, float top, float right, float bottom, int color, String type) {
+    public Player getPlayer() {
+        return player;
+    }
+
+    public Shape(float left, float top, float right, float bottom, int color, String type, Player player) {
         this.left = left;
         this.right = right;
         this.top = top;
         this.bottom = bottom;
         this.color = color;
+        this.player = player;
 
         String[] typeList = new String[2];
         typeList[0] = "circle";
@@ -142,7 +149,8 @@ public class Shape {
     private void drawCross(Canvas can) {
         this.paint.setStyle(Paint.Style.STROKE);
         this.paint.setColor(this.color);
-        this.paint.setStrokeWidth(14);
+        float strokeWidth = (this.bottom - this.top) / 4;
+        this.paint.setStrokeWidth(strokeWidth);
 
         centerX = this.left + (this.right - this.left) / 2;
         centerY = this.top + (this.bottom - this.top) / 2;
